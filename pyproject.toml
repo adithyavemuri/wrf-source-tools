@@ -7,6 +7,7 @@ name = "wrf-source-tools"
 version = "1.0.0"
 description = "Offline deterministic Fortran source and call-graph tools for WRF"
 requires-python = ">=3.10"
+license = { file = "LICENSE" }
 dependencies = []
 
 [project.scripts]

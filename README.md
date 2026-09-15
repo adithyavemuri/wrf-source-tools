@@ -132,3 +132,7 @@ PYTHONPATH=src python3 -m unittest discover -s tests -v
 ```
 
 All normal tests are offline and deterministic.
+
+## License
+
+Released under the [MIT License](LICENSE).
