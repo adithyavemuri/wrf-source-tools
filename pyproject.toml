@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wrf-source-tools"
+version = "1.0.0"
+description = "Offline deterministic Fortran source and call-graph tools for WRF"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+wrf-source = "wrf_source_tools.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+wrf_source_tools = ["adapters/*.json"]

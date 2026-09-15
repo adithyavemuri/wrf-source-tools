@@ -1,0 +1,67 @@
+{
+  "adapter_schema_version": 1,
+  "software": {
+    "id": "wrf",
+    "display_name": "Weather Research and Forecasting Model"
+  },
+  "languages": ["fortran"],
+  "components": {
+    "surface-layer": {
+      "driver": {
+        "file": "phys/module_surface_driver.F",
+        "procedure": "surface_driver"
+      },
+      "selector": {
+        "name": "sf_sfclay_physics",
+        "source": "runtime_namelist"
+      },
+      "scheme_constants": {
+        "file": "frame/module_state_description.F"
+      },
+      "metadata": {
+        "parser": "wrf_registry_package",
+        "files": ["Registry/Registry.EM_COMMON"]
+      },
+      "initialization": {
+        "driver_file": "phys/module_physics_init.F"
+      },
+      "compatibility": {
+        "files": ["share/module_check_a_mundo.F"]
+      },
+      "documentation": {
+        "parser": "wrf_readme_namelist",
+        "files": ["run/README.namelist"]
+      },
+      "references": {
+        "mynn": {
+          "display_name": "MYNN surface layer",
+          "value": "5",
+          "symbol": "mynnsfcscheme",
+          "package": "mynnsfcscheme",
+          "primary_entry": "sfclay_mynn",
+          "entry_targets": ["mynn_seaice_wrapper", "sfclay_mynn"],
+          "initialization_targets": ["mynn_sf_init_driver"]
+        },
+        "revised-mm5": {
+          "display_name": "Revised MM5 Monin-Obukhov",
+          "value": "1",
+          "symbol": "sfclayrevscheme",
+          "package": "sfclayrevscheme",
+          "primary_entry": "sfclayrev",
+          "entry_targets": ["sfclayrev_seaice_wrapper", "sfclayrev"],
+          "initialization_targets": []
+        }
+      },
+      "integration_steps": [
+        {"location": "scheme module", "requirement": "Implement a public surface-layer entry procedure and explicit interface."},
+        {"location": "phys/module_surface_driver.F", "requirement": "Import the module and add a configuration-guarded driver call."},
+        {"location": "frame/module_state_description.F", "requirement": "Add a unique symbolic selector constant."},
+        {"location": "Registry/Registry.EM_COMMON", "requirement": "Add a package condition and any required state allocation."},
+        {"location": "phys/module_physics_init.F", "requirement": "Add initialization only if the implementation requires it."},
+        {"location": "share/module_check_a_mundo.F", "requirement": "Add or revise compatibility checks based on supported coupled schemes."},
+        {"location": "run/README.namelist", "requirement": "Document the public selector and compatibility requirements."},
+        {"location": "separate validation worktree", "requirement": "Compile the model and run a minimal configuration test."}
+      ]
+    }
+  }
+}
