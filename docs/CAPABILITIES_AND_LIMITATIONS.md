@@ -33,3 +33,6 @@ responsible for scientific interpretation and implementation decisions.
 Use the tool to replace manual source searching and graph construction with
 repeatable evidence. Inspect unresolved edges and configuration assumptions.
 Treat scientific conclusions as a separate review task.
+
+`rg` is used for faster dependency searches when installed. A deterministic
+Python fallback is included, so it is not a required runtime dependency.

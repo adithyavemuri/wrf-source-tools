@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import html
 import re
+import shutil
 import subprocess
 from collections import defaultdict, deque
 from copy import deepcopy
@@ -503,13 +504,22 @@ def _edge(
 
 
 def _rg_files(wrf_root: Path, pattern: str) -> list[Path]:
-    command = [
-        "rg", "-l", "-i",
-        "--glob", "*.F", "--glob", "*.F90", "--glob", "*.f", "--glob", "*.f90",
-        pattern, str(wrf_root),
-    ]
-    completed = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False)
-    return [Path(line) for line in completed.stdout.splitlines() if line]
+    if shutil.which("rg"):
+        command = [
+            "rg", "-l", "-i",
+            "--glob", "*.F", "--glob", "*.F90", "--glob", "*.f", "--glob", "*.f90",
+            pattern, str(wrf_root),
+        ]
+        completed = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False)
+        return [Path(line) for line in completed.stdout.splitlines() if line]
+
+    compiled = re.compile(pattern, re.IGNORECASE | re.MULTILINE)
+    matches = []
+    for path in sorted(wrf_root.rglob("*")):
+        if path.is_file() and path.suffix.lower() in {".f", ".f90"}:
+            if compiled.search(path.read_text(errors="replace")):
+                matches.append(path)
+    return matches
 
 
 def expand_index_for_graph(index: dict, wrf_root: Path, graph: dict) -> tuple[dict, set[str]]:
